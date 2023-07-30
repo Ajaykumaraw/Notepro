@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+
+import HomeStack from './screens/HomeStack'
+import { createStore,applyMiddleware } from 'redux';
+import { Provider } from 'react-redux'
+import  thunk  from 'redux-thunk';
+import rootReducer from './stores/rootReducer'
+
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+) 
+
 
 export default function App() {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+       <Provider store={store}>
+          <HomeStack></HomeStack>
+        </Provider>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
