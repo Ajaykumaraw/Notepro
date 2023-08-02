@@ -4,7 +4,7 @@ import { Image } from 'react-native'
 import { DrawerItemList } from '@react-navigation/drawer';
 import { useSelector } from 'react-redux';
 import tabReducer from '../../stores/tab/tabReducer';
-import { getItemM } from '../../Utils/utils';
+import { getItemM ,setItemM} from '../../Utils/utils';
 import COLORS from '../../SampleData/constants';
 
 
@@ -23,16 +23,9 @@ export default function Profile(props) {
     setactive(!isactive);
   }
 
-  // const getData = async () =>{
-  //      await AsyncStorage.getItem('user', (err, value) => {
-  //       if (err) {
-  //           console.log(err)
-  //       } else {
-  //           JSON.parse(value) // boolean false
-  //           console.log(JSON.parse(value) )
-  //       }
-  //   })
- // }
+  const logout = () =>{
+    setItemM('isloginV',false)
+  }
   return (
     <View style={styles.menuContainer}>
         <View style={styles.menuProfileContainer}>
@@ -53,7 +46,7 @@ export default function Profile(props) {
             {/* <DrawerItemList {...props}/> */}
         </View>
         <View>
-          <TouchableOpacity style={styles.menuButton}>
+          <TouchableOpacity style={styles.menuButton} onPress={logout}>
               <Text style={styles.submitButtonText}>Logout</Text>
             </TouchableOpacity >
         </View>

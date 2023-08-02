@@ -1,37 +1,45 @@
 import { Link } from '@react-navigation/native';
-import { StyleSheet, Text, View ,TextInput,TouchableOpacity,ImageBackground} from 'react-native';
+import { StyleSheet, Text, View ,TextInput,
+  TouchableOpacity,ImageBackground,ToastAndroid, ActivityIndicator} from 'react-native';
 import Login from './Login';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {doUserRegistration} from '../contollers/userAuth'
 import {connect} from 'react-redux'
-import {setseletedTab,RegisterAction} from '../stores/tab/tabAction'
+import {authRegister} from '../stores/Auth/authAction'
 import {tabReducer} from '../stores/tab/tabReducer'
 import {useSelector, useDispatch } from 'react-redux';
 
-export function Register({setseletedTab,data,userRegDispatch,userRegD,navigation}) {
-
+export function Register({registrationStatus,userRegDispatch,userRegD,navigation}) {
   const [username, setUsername] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
+  const [isloading,setIsloading] = useState(false)
+  const _uname = useRef()
+  const _email = useRef()
+  const _pass = useRef()
+
+  const [registration_Status,setRegistration_Status] = useState(false)
  
-        const register = () => {
-         const useReg = {
-          username : username,
-          email : email,
-          password : password
-         }
-      //  const d_ =  doUserRegistration(useReg);
-         userRegDispatch(useReg)
-       
-        // d_.then((response)=>{
-        //   if(response.status == 201) //props.navigation.navigate('HomeScreen');
-        //   alert(response.data);
-        // }).catch((error)=>{alert(error)})
-           
-        } 
-        const openlogin = () =>{
-          navigation.navigate('Login');
-        }
+  useEffect(()=>{
+    if(registrationStatus) {
+      ToastAndroid.show('Registration Successfull', ToastAndroid.SHORT);
+      setIsloading(false)
+      navigation.navigate('Login');
+    }
+
+  })
+
+  const register = () => {
+        const useReg = {username : username,email : email,password : password}
+        userRegDispatch(useReg)
+        setIsloading(true)
+  } 
+
+  
+
+  const openlogin = () =>{
+        navigation.navigate('Login');
+  }
   
   return (
       <View style={styles.container}>
@@ -52,12 +60,14 @@ export function Register({setseletedTab,data,userRegDispatch,userRegD,navigation
                       placeholder = "Username"
                       placeholderTextColor = "#ff7111ff"
                       autoCapitalize = "none"
+                      ref={_uname}
                       onChangeText = {(text) => setUsername(text)}/>
                     <TextInput style = {styles.input}
                       underlineColorAndroid = "transparent"
                       placeholder = "Email"
                       placeholderTextColor = "#ff7111ff"
                       autoCapitalize = "none"
+                      ref={_email}
                       onChangeText = {(text) => setemail(text)}/>
 
                     <TextInput style = {styles.input}
@@ -65,14 +75,18 @@ export function Register({setseletedTab,data,userRegDispatch,userRegD,navigation
                       placeholder = "Password"
                       placeholderTextColor = "#ff7111ff"
                       autoCapitalize = "none"
+                      ref={_pass}
                       onChangeText = {(text) => setPassword(text)}>
                     </TextInput>
-
-                    <TouchableOpacity
-                      style = {styles.submitButton}
-                      onPress = {() => register() }>
-                      <Text style = {styles.submitButtonText}> Create Account </Text>
-                    </TouchableOpacity>
+                    {isloading? <View style={styles.submitButton}>
+                                   <ActivityIndicator size={'small'} color={'orange'}></ActivityIndicator> 
+                                 </View> :  
+                          <TouchableOpacity
+                            style = {styles.submitButton}
+                            onPress = {() => register() }>
+                            <Text style = {styles.submitButtonText}> Create Account </Text>
+                          </TouchableOpacity>
+                    }
               </View>
               {/* alery Register conent */}
               <View style={styles.goToLogin}>
@@ -158,15 +172,12 @@ export function Register({setseletedTab,data,userRegDispatch,userRegD,navigation
 
 
   const mapStateToProps = state =>({
-        data: state.tabReducer.selectedTab,
-        userRegD : state.tabReducer.isRegister
-    
+    registrationStatus: state.authRegister.registrationStatus,
   })
 
   function mapDispatchToProps(dispatch){
       return {
-       setseletedTab : (seletedTab) => {return dispatch(setseletedTab(seletedTab))},
-       userRegDispatch : (userReg) => {return dispatch(RegisterAction(userReg))}
+       userRegDispatch : (userReg) => {return dispatch(authRegister(userReg))}
 
       }
   }

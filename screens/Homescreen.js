@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View,Button, FlatList,
-  SafeAreaView,ToastAndroid, Image} from 'react-native';
+  SafeAreaView,ToastAndroid, Image, ActivityIndicator} from 'react-native';
 import { useEffect, useState,React } from 'react';
 import { getposts,Delete } from '../contollers/post';
 import Profile from '../screens/Header/Profle';
@@ -13,18 +13,19 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import BottomMenu from '../components/BottomMenu';
 import {connect} from 'react-redux'
-import postReducer from '../stores/Post/postReducer'
+import {getpost} from '../stores/Post/postReducer'
 import { useFocusEffect } from '@react-navigation/native';
 
 
 
 
-export  function HomeScreen({navigation,postData}) {
+export  function HomeScreen({navigation,postData,getPostDispatch}) {
  
-  console.log('homescreen',postData)
   const [rs,setRs] = useState({})
   const pData = postData;
   const [likeCounter,setLikeCounter] = useState(1)
+  const [isloading,setisloading] = useState(true)
+  
   //const [userName,setUserName] = useState();
   let userName = '';
   const handleRegister = () => {navigation.navigate('Register')}
@@ -32,12 +33,24 @@ export  function HomeScreen({navigation,postData}) {
   const handleWritePost = () => {navigation.navigate('WritePost')}
 
   useFocusEffect(()=>{
-    setRs(postData.reverse())
    
+    console.log('use focus working ********************')
+    
+    setRs(postData)
+    
   })
 
+ 
+
   useEffect(()=>{
-   
+    getItemM("username_").then((res)=>{
+      console.log('in home ',res)
+      getPostDispatch(res)
+      })
+    setisloading(true)
+   setTimeout(() => {
+    setisloading(false)
+   }, 2000);
     console.log('use effect working ********************')
   //  const myjson =  getItemM('username_')
     // myjson.then((res)=>{
@@ -60,7 +73,7 @@ export  function HomeScreen({navigation,postData}) {
   const deletePost = (Id) =>{
     ToastAndroid.show('Post Deleted successfully!', ToastAndroid.SHORT);
       Delete(Id);
-      getPost();
+   //   getPost();
   }
   function postlike(){
     setLikeCounter(likeCounter+1)
@@ -71,7 +84,12 @@ export  function HomeScreen({navigation,postData}) {
       <View style={styles.container}>
       <Header navigation={navigation}></Header>
        <SafeAreaView style={styles.list}>
-          <FlatList style={styles.Items}
+       {isloading?
+       <View style={{flex:1,height:'100%',alignItems:'center',justifyContent:'center'}}>
+            <ActivityIndicator size={'large'} color={'orange'}></ActivityIndicator> 
+       </View> 
+       :
+       <FlatList style={styles.Items}
             data={rs}
             renderItem={({item}) =>  
             <View style={styles.itemContainer}>
@@ -110,7 +128,7 @@ export  function HomeScreen({navigation,postData}) {
                 </View>
             </View>}
             key={item => item._id}
-          />
+          />}
        </SafeAreaView>
        <BottomMenu navigation={navigation} ></BottomMenu>
       </View>
@@ -123,6 +141,12 @@ export  function HomeScreen({navigation,postData}) {
   
   })
  
+function mapDispatchToProps(dispatch){
+  return {
+   getPostDispatch : (userReg) => {return dispatch(getpost(userReg))}
+  
+  }
+  }
   
   
   export default connect (mapStateToProps,)(HomeScreen)

@@ -1,14 +1,17 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity,Image,SafeAreaView,FlatList} from 'react-native';
 import sampleData from '../SampleData/sampleData';
+import {connect} from 'react-redux'
+import postReducer from '../stores/Post/postReducer';
 
 
-function Comments({comments}) {
+export function Comments({showcmt,commentsData,name,id}) {
+  console.log('from comment',showcmt)
   return (
    <>
     <SafeAreaView style={styles.list}>
           <FlatList style={styles.Items}
-            data={comments}
+            data={showcmt.reverse()}
             renderItem={({item}) =>  
             <View style={styles.itemContainer}>
                 <View style={styles.itemTitle}>
@@ -18,14 +21,14 @@ function Comments({comments}) {
                       {/* <Text style={styles.itemInit}>{item.profile_picture}</Text> */}
                   </View>
                   <View style={styles.postDetails}>
-                      <Text style={styles.userName}>{item.name}</Text>
-                      <Text style={styles.userNamesub}>{item.id}</Text>
+                      <Text style={styles.userName}>{name}</Text>
+                      <Text style={styles.userNamesub}>{id}</Text>
                   </View>
                  
                 </View>
                 <Text onPress={()=>navigation.navigate('SinglePost',{
                           itemData: item,
-                        })} style={styles.postDesciption}>{item.commentMsg}
+                        })} style={styles.postDesciption}>{item}
                 </Text>
             </View>}
             key={item => item._id}
@@ -35,7 +38,18 @@ function Comments({comments}) {
   )
 
   }
-export default Comments
+  
+
+
+
+const mapStateToProps = state =>({
+ commentsData : state.postReducer.post,
+
+})
+
+
+
+export default connect (mapStateToProps)(Comments)
 
 
 

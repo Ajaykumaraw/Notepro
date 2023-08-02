@@ -1,15 +1,29 @@
-import { StyleSheet, Text, View ,TextInput,TouchableOpacity,ImageBackground} from 'react-native';
+import { StyleSheet, Text, View ,TextInput,TouchableOpacity,ImageBackground,ActivityIndicator} from 'react-native';
 import {userLogin} from '../contollers/userAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {connect} from 'react-redux'
 import {LoginAction} from '../stores/tab/tabAction'
+import {authLogin} from '../stores/Auth/authAction'
+import {setItemM} from '../Utils/utils'
 
 
 
-export  function Login({navigation,userLoginDispatch}) {
+
+export  function Login({navigation,userLoginDispatch,userLoginData}) {
+    console.log('from login',userLoginData)
+  const [loading,setloading] = useState(false)
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
  
+  useEffect(()=>{
+    if(userLoginData.islogin){
+      setItemM('isloginV',userLoginData.islogin)
+    }else setItemM('isloginV',false)
+    
+  })
+
+
 const login = () => {
   const usd = {
     username : username,
@@ -17,6 +31,7 @@ const login = () => {
   }
   console.log(usd.username)
   userLoginDispatch(usd)
+  setloading(true)
 } 
 const openregister = () =>{
   navigation.navigate('Register');
@@ -47,12 +62,14 @@ const openregister = () =>{
                   placeholderTextColor = "#9c3806"
                   autoCapitalize = "none"
                   onChangeText = {(text) => setPassword(text)}/>
+               
+                          <TouchableOpacity
+                            style={styles.submitButton}
+                            onPress = { () => login() }>
+                            <Text style = {styles.submitButtonText}> 
+                            {loading?<ActivityIndicator size={'small'} color={'orange'}></ActivityIndicator> : "Login" }</Text>
+                          </TouchableOpacity>
                 
-                <TouchableOpacity
-                  style={styles.submitButton}
-                  onPress = { () => login() }>
-                  <Text style = {styles.submitButtonText}> Login </Text>
-                </TouchableOpacity>
                 <View style={styles.forgotPassLabel}>
                       <Text onPress={()=> navigation.navigate('ResetPassword')} style={styles.forgotPassText}>Forgot Password</Text>
                  </View>
@@ -151,13 +168,13 @@ const openregister = () =>{
 
 
   const mapStateToProps = state =>({
-   userLoginData: state.tabReducer.userLoginData
+   userLoginData: state.loginReducer.user
 
 })
 
 function mapDispatchToProps(dispatch){
   return {
-   userLoginDispatch : (userLog) => {return dispatch(LoginAction(userLog))}
+   userLoginDispatch : (userLog) => {return dispatch(authLogin(userLog))}
 
   }
 }

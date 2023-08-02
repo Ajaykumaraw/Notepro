@@ -12,7 +12,7 @@ import ResetPassword from './ResetPassword';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {connect} from 'react-redux'
 import {tabReducer} from '../stores/tab/tabReducer'
@@ -28,13 +28,20 @@ const Stack = createNativeStackNavigator()
 
 
 export  function HomeStack({islogin,username}) {
+  console.log('from home',islogin )
       setItemM('username_',username)
-    
-    
+    //  setItemM('isloginV',islogin)
+      const [isLogedin,setIslogedin] = useState(false)
+    let islogin_ ;
+     getItemM("isloginV").then((res)=>{
+      console.log('in home ',res)
+      setIslogedin(res)
+      })
+   
       
         // AsyncStorage.setItem('user',username);  
         
-  console.log("in home"+islogin,username)  
+  //console.log("in home"+islogin,username)  
   
 
    const isRegister = useSelector(state=>state.isRegister);
@@ -44,7 +51,7 @@ export  function HomeStack({islogin,username}) {
   return (
     <>
     <NavigationContainer> 
-    {  islogin?(<><Drawer.Navigator  
+    { islogin ||isLogedin ?(<><Drawer.Navigator  
                               screenOptions={{
                                 drawerStyle: {
                                   width: '70%',
@@ -65,8 +72,8 @@ export  function HomeStack({islogin,username}) {
                               </>):( 
                               <>
                                 <Stack.Navigator>
-                                      <Stack.Screen  options={{headerShown: false}}  name="Register" component = {Register} /> 
                                       <Stack.Screen  options={{headerShown: false}}  name="Login" component = {Login}  /> 
+                                      <Stack.Screen  options={{headerShown: false}}  name="Register" component = {Register} /> 
                                       <Stack.Screen  options={{headerShown: false}}  name="ResetPassword" component = {ResetPassword}  /> 
                                 </Stack.Navigator>
                                </>)
@@ -78,8 +85,8 @@ export  function HomeStack({islogin,username}) {
 }
 
 const mapStateToProps = state =>({
-  islogin: state.tabReducer.IsLogin,
-  username: state.tabReducer.user,
+  islogin: state.loginReducer.user.islogin,
+  username: state.loginReducer.user.username,
 
 })
 

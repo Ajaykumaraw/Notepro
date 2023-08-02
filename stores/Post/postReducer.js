@@ -15,24 +15,8 @@ const initialState = {
             {"commentId": 'comment 2',
                 "commentMsg":'Demo comments 2'
             },
-            {"commentId": 'comment 3',
-             "commentMsg":'Demo comments 3'
-            },
-            {"commentId": 'comment 3',
-            "commentMsg":'Demo comments 3'
-            },
-            {"commentId": 'comment 1',
-                "commentMsg":'Demo comments 1'
-            },
-            {"commentId": 'comment 2',
-                "commentMsg":'Demo comments 2'
-            },
-            {"commentId": 'comment 3',
-             "commentMsg":'Demo comments 3'
-            },
-            {"commentId": 'comment 3',
-            "commentMsg":'Demo comments 3'
-            }
+            
+           
         ]
 
       },]
@@ -48,9 +32,10 @@ const postReducer = (state = initialState,action) =>{
                 post :[
                     ...state.post,
                     {
-                        name:action.payload.name,
-                        bio: action.payload.bio,
-                        id : action.payload.id,
+                         name:action.payload.name,
+                         bio: action.payload.bio,
+                         id : action.payload.id,
+                        // comments: action.payload
                     }
                 ]
             }
@@ -70,6 +55,22 @@ const postReducer = (state = initialState,action) =>{
                 console.log(action.payload)
             return {
                 ...state,
+            }
+        case postActionType.GET_POSTS:
+                console.log('getposts',action.payload)
+            return {
+                ...state,
+                post :[
+                    ...state.post,
+                    action.payload
+                        // comments: action.payload
+                ]
+            }
+        case postActionType.ADD_COMMENT:
+                console.log('action in reducer',action.payload)
+            return {
+                ...state,
+                
             }
         default :
             return state

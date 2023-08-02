@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TouchableOpacity,Image,ScrollView, SafeAreaView} from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity,Image,ScrollView, SafeAreaView,TextInput, ActivityIndicator} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,11 +7,33 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Comments from '../components/comments';
 import Header from '../components/Header';
 import BottomModal from '../components/BottomModal';
+import {connect} from 'react-redux'
+import {addComment} from '../stores/Post/postActions'
 
 
-export default function SinglePost({route,navigation}) {
+
+export  function SinglePost({route,navigation,addCommentDispatch,commentsData}) {
+  console.log('in single cmt',commentsData)
   const [isvisible,setisVisible] = useState(false)
+  const [comment_, setComment] = useState('')
+  const [showcmt,setshowcmt] = useState([]);
+  const [isloading,setisloading] = useState(true)
+
     const {itemData} = route.params;
+
+  
+    useEffect(()=>{
+    
+    })
+
+    const sendComment = () =>{
+      setshowcmt([...showcmt,comment_])
+      console.log('in single post',comment_)
+       const cmtObj = {"commentId":'comment3',
+                       "commentMsg":comment_}
+                       
+      addCommentDispatch(cmtObj)
+    }
   return (
     <>
     <View style={styles.container}>
@@ -27,7 +49,8 @@ export default function SinglePost({route,navigation}) {
                 </TouchableOpacity>
         </View> 
     </View>
-    <ScrollView>
+    <SafeAreaView>
+      <ScrollView>
     <View style={styles.itemContainer}>
                 <View style={styles.itemTitle}>
                 {/* profile pic */}
@@ -49,7 +72,7 @@ export default function SinglePost({route,navigation}) {
                
                 <View style={styles.postMenu} >
                     <View onPress={()=>postlike} style={styles.postMenuLinksContainer} ><Icon name='like1' size={20} color={'orange'}/></View>
-                    <View style={styles.postMenuLinksContainer}><FontAwesome name='commenting' size={20} color={'orange'}/></View>
+                    <View style={styles.postMenuLinksContainer}><Text>{showcmt.length}</Text><FontAwesome name='commenting' size={20} color={'orange'}/></View>
                     <View style={styles.postMenuLinksContainer}><FontAwesome name='share-alt-square' size={20} color={'orange'}/></View>
                     <View style={styles.postMenuLinksContainer}><Ionicons name='stats-chart-sharp' size={20} color={'orange'}/></View>
                 </View>
@@ -57,16 +80,51 @@ export default function SinglePost({route,navigation}) {
             <View>
                  <Text style={styles.commentsLable}>Comments</Text>
                  <View style={styles.commentContainer}>
-                    <Comments comments={itemData.comments}></Comments>
+                 {isloading?  <View style={{flex:1,height:'100%',alignItems:'center',justifyContent:'center'}}>
+                                <ActivityIndicator size={'large'} color={'orange'}></ActivityIndicator> 
+                              </View> : <Comments id={itemData.id}  name={itemData.name} showcmt={showcmt}></Comments>
+                              }  
                 </View>
             </View>
-       
+            </ScrollView>
+     </SafeAreaView>
+            <View style={styles.commentWritingContainer} >
+              <TextInput style = {styles.input}
+                        underlineColorAndroid = "transparent"
+                        name = "Addcomment"
+                        placeholder = "Write your comment..."
+                        placeholderTextColor = "#8a4004"
+                        autoCapitalize = "none"
+                        multiline={true}
+                        numberOfLines={10}
+                        onChangeText={(text)=> setComment(text)}
+                        />
+                <TouchableOpacity onPress={()=>sendComment()}>
+                   <FontAwesome name='send' size={40} color={'#9c3806'}/>
+                </TouchableOpacity>
+            </View>
      {(isvisible)?<BottomModal></BottomModal>:''}
-     </ScrollView>
+    
     </>
     
   )
 }
+
+
+const mapStateToProps = state =>({
+  commentsData : state.postReducer.post[0].comments,
+})
+
+function mapDispatchToProps(dispatch){
+return {
+ addCommentDispatch : (userReg) => {return dispatch(addComment(userReg))}
+
+}
+}
+
+export default connect (mapStateToProps,mapDispatchToProps)(SinglePost)
+
+
 
 
 
@@ -122,6 +180,7 @@ const styles = StyleSheet.create({
         margin:5,
         backgroundColor:'#ffffff',
         overflow:'hidden',
+       
     },
       itemTitle:{
         flexDirection:'row',
@@ -205,6 +264,26 @@ const styles = StyleSheet.create({
           fontWeight:500,
       },
       commentContainer:{
+        marginBottom:60,
+      },
+      commentWritingContainer:{
+          width:'100%',
+          height:60,
+          bottom:1,
+          position:'absolute',
+          backgroundColor:'orange',
+          flexDirection:'row',
+          alignItems:'center',
+          justifyContent:'space-around'
+          
+      },
+      input:{
+        height:'90%',
+        width:'80%',
+        backgroundColor:'#f2cc8a',
+        color:'#8a4004',
+        textAlignVertical: 'top',
+        padding:7,
 
       }
 
