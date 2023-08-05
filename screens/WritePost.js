@@ -7,24 +7,31 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch } from 'react-redux';
 import {connect} from 'react-redux'
-import {createPost} from '../stores/Post/postActions'
+import {createPostAction} from '../stores/Post/postActions'
+import {getItemM} from '../Utils/utils'
 
 
-export  function WritePost({navigation,createPostAction}) {
+
+export  function WritePost({navigation,createPostActionD}) {
   const [postTitle, setpostTitle] = useState("");
   const [postDesciption, setpostDesciption] = useState("");
   const [createdBy, setcreatedBy] = useState("");
   const [loading, isloading] = useState(false);
   const postDispatch = useDispatch();
 
+  getItemM("username_").then((res)=>{
+    console.log('in home ',res)
+    setcreatedBy(res)
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
 
 
-const demoData =   {
-  "name": "Rahul Shukla",
-  "language": "Hindi",
-  "id": Math.random(),
-  "bio": postDesciption,
-  "version": 1.72
+const createPostData =   {
+  "postTitle" : "postTitle",
+  "postDesciption" : postDesciption,
+  "createdBy" : createdBy
 }
 
 
@@ -40,7 +47,7 @@ const demoData =   {
   } 
 
   const SavePost=()=>{
-    createPostAction(demoData)
+    createPostActionD(createPostData)
     navigation.navigate('HomeScreen')
   }
 
@@ -94,7 +101,7 @@ const mapStateToProps = state =>({
 
 function mapDispatchToProps(dispatch){
 return {
-  createPostAction : (userReg) => {return dispatch(createPost(userReg))}
+  createPostActionD : (userReg) => {return dispatch(createPostAction(userReg))}
 
 }
 }

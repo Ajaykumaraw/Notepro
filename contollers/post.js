@@ -22,7 +22,7 @@ export const postCreate =  async (posttitle,postDesciption,createdBy) =>{
   }
 
   export const getposts= async(createdBy)=>{
-    const fetchpostURL = "http://192.168.196.89:8080/api/v1/post/getPostByUser"
+    const fetchpostURL = "http://192.168.145.89:8080/api/v1/post/getPostByUser"
     let resData = '';
     await axios({
       method: 'post',

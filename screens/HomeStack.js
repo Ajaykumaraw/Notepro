@@ -28,13 +28,13 @@ const Stack = createNativeStackNavigator()
 
 
 export  function HomeStack({islogin,username}) {
-  console.log('from home',islogin )
+ 
       setItemM('username_',username)
     //  setItemM('isloginV',islogin)
       const [isLogedin,setIslogedin] = useState(false)
     let islogin_ ;
      getItemM("isloginV").then((res)=>{
-      console.log('in home ',res)
+    //  console.log('in home ',res)
       setIslogedin(res)
       })
    

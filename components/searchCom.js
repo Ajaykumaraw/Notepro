@@ -1,9 +1,25 @@
-import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity,FlatList, TextInput, SafeAreaView, ScrollView} from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View,ActivityIndicator, TouchableOpacity,FlatList, TextInput, SafeAreaView, ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import sampleData from '../SampleData/sampleData'
+import {connect} from 'react-redux'
+import userReducer from '../stores/user/userReducer'
+import {getAllUser} from '../stores/user/userActions'
 
-export default function SearchCom({navigation}) {
+
+export function SearchCom({navigation,usersData,getUserDispatch}) {
+
+  const [usData, setUsData] = useState()
+  const [isloading,setisloading] = useState(true)
+
+
+ 
+  useEffect(()=>{
+    getUserDispatch()
+    setUsData(...usersData.user)
+    console.log('in useeffect',usersData.user)
+    setisloading(false)
+  },[])
   return (
     <>
       <View style={styles.container}>
@@ -12,8 +28,13 @@ export default function SearchCom({navigation}) {
       </View>
       <Text style={styles.people}>People</Text>
       <SafeAreaView>
+      {isloading?
+       <View style={{flex:1,height:'100%',alignItems:'center',justifyContent:'center'}}>
+            <ActivityIndicator size={'large'} color={'orange'}></ActivityIndicator> 
+       </View> 
+       :
         <FlatList style={styles.Items}
-            data={sampleData}
+            data={usersData.user}
             renderItem={({item}) =>  <>
             <View style={styles.profileContainer}>
               {/* user Initial */}
@@ -21,8 +42,8 @@ export default function SearchCom({navigation}) {
                     <View style={styles.ProfileDetailsSub} >
                         <View style={styles.ProfileDetails} >
                               <Text style={styles.profileName} >{item.name}</Text>
-                              <Text style={styles.profileName} >{item.id}</Text>
-                              <Text style={styles.profileName} >{item.version}</Text>
+                              <Text style={styles.profileName} >{item._id}</Text>
+                              <Text style={styles.profileName} >{item.follower}</Text>
                         </View>
                         <View style={styles.profileBtnContainer}>
                           <TouchableOpacity style={styles.profileFollowBtn}>
@@ -35,11 +56,31 @@ export default function SearchCom({navigation}) {
         </>
             }
             key={item => item._id}
-          />
+          />}
       </SafeAreaView>
     </>
   )
 }
+
+
+
+
+const mapStateToProps = state =>({
+  usersData: state.userReducer,
+
+})
+
+function mapDispatchToProps(dispatch){
+return {
+ getUserDispatch : () => {return dispatch(getAllUser())}
+
+}
+}
+
+
+export default connect (mapStateToProps,mapDispatchToProps)(SearchCom)
+
+
 
 
 
@@ -113,6 +154,7 @@ const styles = StyleSheet.create({
   },
   profileName:{
     fontWeight:'500',
+    textTransform:'capitalize'
 
   },
   profileBtnContainer:{

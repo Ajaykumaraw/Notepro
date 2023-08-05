@@ -2,39 +2,29 @@ import * as postActionType from './postActions'
 import {doUserRegistration,userLogin} from '../Operations'
 
 const initialState = {
-    post: [{
-        "name": "Samra Delic",
-        "language": "Bosnian",
-        "id": "BXJWNTJ2TDID61PJ",
-        "bio": "Donec pellentesque ultrices mi, non consectetur eros luctus non. Sed nec suscipit ligula.",
-        "version": 2.5,
-        "comments":[
-            {"commentId": 'comment 1',
-                "commentMsg":'Demo comments 1'
-            },
-            {"commentId": 'comment 2',
-                "commentMsg":'Demo comments 2'
-            },
-            
-           
-        ]
-
-      },]
+    post: [
+        {    
+            _id:'',
+            createdBy:'',
+            postDesciption:'',
+            title:''
+        }
+    ]
 }
 
 
 const postReducer = (state = initialState,action) =>{
     switch(action.type){
         case postActionType.CREATE_POST:
-            console.log('reducer'+action.payload.name)
+            console.log('reducer post reducer'+action.payload.createdBy)
             return {
                 ...state,
                 post :[
                     ...state.post,
                     {
-                         name:action.payload.name,
-                         bio: action.payload.bio,
-                         id : action.payload.id,
+                        createdBy:action.payload.createdBy,
+                        postDesciption: action.payload.postDesciption,
+                        title : action.payload.title,
                         // comments: action.payload
                     }
                 ]
@@ -61,8 +51,7 @@ const postReducer = (state = initialState,action) =>{
             return {
                 ...state,
                 post :[
-                    ...state.post,
-                    action.payload
+                    ...action.payload
                         // comments: action.payload
                 ]
             }
