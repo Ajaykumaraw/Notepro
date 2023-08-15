@@ -2,7 +2,7 @@ import * as userActionType from './userActions'
 
 const initialState = {
     user: [
-    
+       
     ]
 }
 
@@ -23,10 +23,30 @@ const userReducer = (state = initialState,action) =>{
                 ...state,
                 
             }
-      
+        case userActionType.ADD_TO_FOLLOWING:
+            console.log('add to following '+action.payload)
+            return {
+                 ...state,
+               
+                    
+            }
+          
         default :
             return state
     }
 }
 
 export default userReducer;
+
+// {
+//     following : []
+// }
+
+// user: [
+//     {
+//         following : [
+//             ...following,
+//             action.payload
+//         ]
+//     }
+// ]

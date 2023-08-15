@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default  function BottomMenu({navigation}) {
+export default  function BottomMenu({item,navigation}) {
     const [largeMenu,setLargeMenu] = useState(false)
     const [onLongPress,setonLongPress] = useState(true)
 
@@ -18,7 +18,8 @@ export default  function BottomMenu({navigation}) {
           <AntDesign name='home' size={40} color={'#9c3806'}/>
         </TouchableOpacity>:''}
        {largeMenu?<View style={styles.largeMenu}>
-       <TouchableOpacity style={styles.BottomMenuBtn} onPress={()=>{navigation.navigate('WritePost')}}>
+       <TouchableOpacity style={styles.BottomMenuBtn} onPress={()=>{navigation.navigate('WritePost',{itemData: item
+                    })}}>
           <FontAwesome name='pencil-square-o' size={40} color={'#9c3806'}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.BottomMenuBtn} onPress={()=>{setLargeMenu(!largeMenu)}}>

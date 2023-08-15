@@ -58,6 +58,7 @@ const openregister = () =>{
                 
                 <TextInput style={styles.input}
                   underlineColorAndroid = "transparent"
+                  secureTextEntry = {true}
                   placeholder = "Password"
                   placeholderTextColor = "#9c3806"
                   autoCapitalize = "none"

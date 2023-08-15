@@ -13,11 +13,11 @@ import {addComment} from '../stores/Post/postActions'
 
 
 export  function SinglePost({route,navigation,addCommentDispatch,commentsData}) {
-  console.log('in single cmt',commentsData)
+  console.log('in single cmt',route.params)
   const [isvisible,setisVisible] = useState(false)
   const [comment_, setComment] = useState('')
   const [showcmt,setshowcmt] = useState([]);
-  const [isloading,setisloading] = useState(true)
+  const [isloading,setisloading] = useState(false)
 
     const {itemData} = route.params;
 
@@ -59,7 +59,7 @@ export  function SinglePost({route,navigation,addCommentDispatch,commentsData}) 
                       {/* <Text style={styles.itemInit}>{item.profile_picture}</Text> */}
                   </View>
                   <View style={styles.postDetails}>
-                      <Text style={styles.userName}>{itemData.name}</Text>
+                      <Text style={styles.userName}>{itemData.createdBy}</Text>
                       <Text style={styles.userNamesub}>{itemData.id}</Text>
                   </View>
                   <View style={styles.postFollowBtn}>
@@ -68,7 +68,7 @@ export  function SinglePost({route,navigation,addCommentDispatch,commentsData}) 
                       </TouchableOpacity>
                   </View>
                 </View>
-                <Text style={styles.postDesciption}>{itemData.bio}</Text>
+                <Text style={styles.postDesciption}>{itemData.postDesciption}</Text>
                
                 <View style={styles.postMenu} >
                     <View onPress={()=>postlike} style={styles.postMenuLinksContainer} ><Icon name='like1' size={20} color={'orange'}/></View>

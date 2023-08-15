@@ -117,6 +117,12 @@ export const createPost =  async (createPostData) =>{
 }
 
 
+/* ADD USER TO FOLLOWING LIST */
+export const addToFollowingList = (id)=>{
+  console.log('in following api'+id)
+    //api call to add to following list  
+  return id;
+}
 
 
 

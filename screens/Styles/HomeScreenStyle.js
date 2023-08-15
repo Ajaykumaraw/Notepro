@@ -30,7 +30,6 @@ export default styles = StyleSheet.create({
       paddingTop:10 
     },
     postUserImg:{
-      width:50,
       height:50,
       borderWidth:1,
       borderColor:'orange',
@@ -48,6 +47,7 @@ export default styles = StyleSheet.create({
       fontSize: 16,  
       color:"#3b1a0c",
       fontWeight:500,
+      textTransform: 'capitalize'
     },
     userNamesub:{
       fontSize: 12,  
@@ -122,7 +122,7 @@ export default styles = StyleSheet.create({
       flexDirection:'column',
     },
     postFollowBtn:{
-      marginLeft:70,
+      marginLeft:20,
       padding:5,
       backgroundColor:'#f27805',
       borderRadius:5,

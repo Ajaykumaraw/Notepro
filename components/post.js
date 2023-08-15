@@ -12,23 +12,22 @@ export default function Post({navigation,item}) {
         <View style={styles.itemContainer}>
             <View style={styles.itemTitle}>
             {/* profile pic */}
-            <View style={styles.postUserImg}>
-                <Image style={styles.itemInit} source={ require('../assets/profile.jpeg')}></Image>
-                {/* <Text style={styles.itemInit}>{item.profile_picture}</Text> */}
-            </View>
-            <View style={styles.postDetails}>
-                <Text style={styles.userName}>{item.createdBy}</Text>
-                <Text style={styles.userNamesub}>{item._id}</Text>
-            </View>
-            <View style={styles.postFollowBtn}>
-                <TouchableOpacity>
-                    <Text style={styles.postFollowBtnText}>+ Follow</Text>
-                </TouchableOpacity>
-            </View>
+                <View style={styles.postUserImg}>
+                    <Image style={styles.itemInit} source={ require('../assets/profile.jpeg')}></Image>
+                    {/* <Text style={styles.itemInit}>{item.profile_picture}</Text> */}
+                </View>
+                <View style={styles.postDetails}>
+                    <Text style={styles.userName}>{item.createdBy}</Text>
+                    <Text style={styles.userNamesub}>{item._id}</Text>
+                </View>
+                <View style={styles.postFollowBtn}>
+                    <TouchableOpacity>
+                        <Text style={styles.postFollowBtnText}>+ Follow</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         
-            <Text onPress={()=>navigation.navigate('SinglePost',{
-                    itemData: item,
+            <Text onPress={()=>navigation.navigate('SinglePost',{itemData: item,
                     })} style={styles.postDesciption}>{item.postDesciption}
             </Text>
             {(2>0)?<View style={styles.LikeCounder}>

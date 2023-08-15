@@ -23,7 +23,8 @@ import Post from '../components/post';
 export  function HomeScreen({navigation,postData,getPostDispatch}) {
   console.log("in home post",postData)
   const [rs,setRs] = useState({})
-  const pData = postData;
+  const pData = postData.reverse();
+ // pData.pop()
   const [likeCounter,setLikeCounter] = useState(1)
   const [isloading,setisloading] = useState(true)
   
@@ -40,6 +41,7 @@ export  function HomeScreen({navigation,postData,getPostDispatch}) {
     
       getItemM("username_").then((res)=>{
         console.log('in home ',res)
+        userName = res;
           getPostDispatch(res)
         })
         .catch((error)=>{
@@ -89,7 +91,7 @@ export  function HomeScreen({navigation,postData,getPostDispatch}) {
             key={item => item._id}
           />}
        </SafeAreaView>
-       <BottomMenu navigation={navigation} ></BottomMenu>
+       <BottomMenu item={userName} navigation={navigation} ></BottomMenu>
       </View>
     );
   }

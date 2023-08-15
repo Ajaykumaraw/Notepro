@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import sampleData from '../SampleData/sampleData'
 import {connect} from 'react-redux'
 import userReducer from '../stores/user/userReducer'
-import {getAllUser} from '../stores/user/userActions'
+import {getAllUser,addToFollowing} from '../stores/user/userActions'
 
 
-export function SearchCom({navigation,usersData,getUserDispatch}) {
+export function SearchCom({navigation,usersData,getUserDispatch,addToFollowDispatch}) {
 
   const [usData, setUsData] = useState()
   const [isloading,setisloading] = useState(true)
@@ -20,6 +20,13 @@ export function SearchCom({navigation,usersData,getUserDispatch}) {
     console.log('in useeffect',usersData.user)
     setisloading(false)
   },[])
+
+
+  const followHandler = (_id) =>{
+    addToFollowDispatch(_id)
+    alert('added to following list'+_id);
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -46,7 +53,7 @@ export function SearchCom({navigation,usersData,getUserDispatch}) {
                               <Text style={styles.profileName} >{item.follower}</Text>
                         </View>
                         <View style={styles.profileBtnContainer}>
-                          <TouchableOpacity style={styles.profileFollowBtn}>
+                          <TouchableOpacity onPress={()=>followHandler(item._id)} style={styles.profileFollowBtn}>
                             <Text style={styles.profileFollowBtnText}>Follow</Text>
                           </TouchableOpacity>
                         </View>
@@ -72,8 +79,8 @@ const mapStateToProps = state =>({
 
 function mapDispatchToProps(dispatch){
 return {
- getUserDispatch : () => {return dispatch(getAllUser())}
-
+   getUserDispatch : () => {return dispatch(getAllUser())},
+   addToFollowDispatch : (id) => {return dispatch(addToFollowing(id))}
 }
 }
 

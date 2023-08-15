@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View,TextInput,TouchableOpacity,Image,SafeAreaView,ActivityIndicator } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { postCreate } from '../contollers/post';
 import Header from '../components/Header';
 import IonAntDesignicons from 'react-native-vector-icons/Ionicons';
@@ -12,21 +12,27 @@ import {getItemM} from '../Utils/utils'
 
 
 
-export  function WritePost({navigation,createPostActionD}) {
+export  function WritePost({route,navigation,createPostActionD}) {
   const [postTitle, setpostTitle] = useState("");
   const [postDesciption, setpostDesciption] = useState("");
   const [createdBy, setcreatedBy] = useState("");
   const [loading, isloading] = useState(false);
   const postDispatch = useDispatch();
+  const input = useRef();
+  const {itemData} = route.params;
 
-  getItemM("username_").then((res)=>{
-    console.log('in home ',res)
-    setcreatedBy(res)
-    })
-    .catch((error)=>{
-      console.log(error)
-    })
-
+  useEffect(()=>{
+    input.current.value = "";
+    setpostDesciption("")
+    getItemM("username_").then((res)=>{
+      console.log('in post write ',res)
+      setcreatedBy(res)
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+  
+  },[])
 
 const createPostData =   {
   "postTitle" : "postTitle",
@@ -48,6 +54,7 @@ const createPostData =   {
 
   const SavePost=()=>{
     createPostActionD(createPostData)
+  
     navigation.navigate('HomeScreen')
   }
 
@@ -73,14 +80,15 @@ const createPostData =   {
                       {/* <Text style={styles.itemInit}>{item.profile_picture}</Text> */}
                   </View>
                   <View style={styles.postDetails}>
-                      <Text style={styles.userName}>Jatin</Text>
-                      <Text style={styles.userNamesub}>Pull stack divloper</Text>
+                      <Text style={styles.userName}>{createdBy}</Text>
+                      <Text style={styles.userNamesub}>Profession</Text>
                   </View>
                 </View>
         <View style={styles.writingArea}>
             <TextInput style={styles.writingAreaText}
              placeholder = "Share your thoughts..."
              multiline={true}
+             ref={input}
              numberOfLines={10}
              placeholderTextColor = "#9c5806"
              autoCapitalize = "none"
@@ -189,6 +197,7 @@ export default connect (mapStateToProps,mapDispatchToProps)(WritePost)
       fontSize: 16,  
       color:"#3b1a0c",
       fontWeight:500,
+      textTransform:'capitalize'
     },
   });
 

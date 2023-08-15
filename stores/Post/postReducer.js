@@ -53,7 +53,8 @@ const postReducer = (state = initialState,action) =>{
                 post :[
                     ...action.payload
                         // comments: action.payload
-                ]
+                ],
+               
             }
         case postActionType.ADD_COMMENT:
                 console.log('action in reducer',action.payload)
